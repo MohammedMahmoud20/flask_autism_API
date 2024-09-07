@@ -7,3 +7,6 @@ Pillow==10.4.0
 Werkzeug==3.0.4
 pandas==2.1.0
 joblib==1.3.2
+glob2
+opencv-python
+seaborn
