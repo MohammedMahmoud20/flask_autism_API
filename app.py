@@ -15,8 +15,7 @@ dl_handwriting_model = load_model("model/autism_binary_handwriting_modelv.h5")
 dl_image_model = load_model("model/my_model.h5")
 ml_model = load_model("model/autism_ml_model.h5")  # Load the ML model saved as a .h5 file
 
-# Load the scaler used during training for the ML model
-scaler = joblib.load("model/ml_scaler.pkl")
+
 
 # Helper function to predict using the deep learning models
 def predict_image(model, img_path, target_size=(128, 128)):
@@ -86,21 +85,6 @@ def predict_autism_image_api():
         os.remove(filepath)
         return jsonify({"prediction": prediction, "probability": probability})
 
-# Machine Learning Model API
-@app.route('/ml', methods=['POST'])
-def predict_ml():
-    try:
-        data = request.get_json()
-        if not data:
-            return jsonify({"error": "No input data provided"}), 400
-        input_df = pd.DataFrame([data])
-        input_scaled = scaler.transform(input_df)
-        prediction = ml_model.predict(input_scaled)
-        result = "Non-ASD" if prediction[0][0] > 0.5 else "ASD"
-        return jsonify({"prediction": result})
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     os.makedirs("uploads", exist_ok=True)
